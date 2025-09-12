@@ -18,14 +18,14 @@ a = [1,5,66,12] # # 1 5 12 66
 
 # print(a)
 
-def generator(a:int, b:int, size:int):
+def generate_array(a:int, b:int, size:int):
     arr=[]
     for n in range(0,size):
         arr.append(random.randint(a,b))
     insertion_sort(arr)
     return arr
 
-array = generator(1,1000,12)
+array = generate_array(1,1000,12)
 print(array)
 
 sizes=[100,200,500,1000,2000,5000]
