@@ -26,14 +26,30 @@ def generate_array(a:int, b:int, size:int):
     return arr
 
 array = generate_array(1,1000,12)
-print(array)
+# print(array)
 
-sizes=[100,200,500,1000,2000,5000]
+def format_auto_duration(d:float):
+    ns = d * 1e9
+    if ns < 1_000:
+        return f"{ns:.2f} ns"
+    elif ns < 1_000_000:
+        return f"{ns / 1_000:.2f} µs" # # microseconds
+    elif ns < 1_000_000_000:
+        return f"{ns / 1_000_000:.2f} ms"
+    else:
+        return f"{ns / 1_000_000_000:.2f} s"
+    
 
-for n in sizes:
-    arr = [random.randint(0,10000) for _ in range(n)]
-    start = time.time()
-    insertion_sort(arr)
-    end = time.time()
-    print(f"Array size {n}: time={(end-start) * 1000:.2f} miliseconds")
+def timing(sizes:list):
 
+    for n in sizes:
+        arr = [random.randint(0,10000) for _ in range(n)]
+        start = time.time()
+        insertion_sort(arr)
+        end = time.time()
+        duration = end - start
+        print(f"Array size {n}: time={format_auto_duration(duration)}")
+
+sizes = [100,200,500,1000,2000,5000,10000,20000,50000,100000,200000,500000]
+
+timing(sizes)

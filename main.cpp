@@ -27,16 +27,34 @@ vector<int> generate_array(int n, int a, int b) {
     return arr;
 }
 
-int main() {
+void print_auto_duration(high_resolution_clock::duration d) {
+    auto ns = duration_cast<nanoseconds>(d).count();
+    if(ns < 1000) {
+        cout <<ns <<" ns"<<endl;
+    } else if(ns < 1'000'000) {
+        cout << ns / 1000.0 << " μs"<<endl; // microseconds
+    } else if(ns < 1'000'000'000) {
+        cout << ns / 1'000'000.0 << " ms"<<endl;
+    } else {
+        cout << ns / 1'000'000'000.0 << " s"<<endl;
+    }
+}
+
+void timing(vector<int>& sizes) {
     srand(time(0));
-    vector<int> sizes = {100,200,500,1000,2000,5000};
     for(int n : sizes) {
-        vector<int> arr=generate_array(n, 0, 10000);
+        vector<int> arr = generate_array(n, 0, 10000);
         auto start = high_resolution_clock::now();
         insertion_sort(arr);
         auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<milliseconds>(stop-start);
-        cout<<"Array size: "<<n<<" -> Time: "<<duration.count()<<"ms"<<endl;
+        auto duration = stop - start;
+        cout<<"Array size: "<<n<<" -> Time: "<<fixed<< setprecision(2);
+        print_auto_duration(duration);
     }
+}
+
+int main() {
+    vector<int> sizes = {100,200,500,1000,2000,5000,10000,20000,50000,100000,200000,500000};
+    timing(sizes);
     return 0;
 }
