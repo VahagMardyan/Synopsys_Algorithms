@@ -102,7 +102,7 @@ def merge_sort_timer(max_size:int = 10_000, factor:int = 10):
         end = time.time()
         duration = end - start
         print(f"Array size {n}: time={format_auto_duration(duration)}")
-        n += int((n * factor)/100)
+        n += (n * factor)//100
 
 m_size = 1000
 
