@@ -79,15 +79,15 @@ class Test:
         print(f"\nArray size: {len(arr)}")
         results = {}
         for name, func in self.algorithms.items():
-            # if name == "Brute-force" and size > 5000:
-            #     print(f"{name}: skipped (too slow)")
-            #     self.results[name].append(float('inf'))
-            #     continue
+            if name == "Brute-force" and size > 5000:
+                print(f"{name}: skipped (too slow)")
+                self.results[name].append(float('inf'))
+                continue
             start = time.perf_counter()
             res = func(arr)
             end = time.perf_counter()
             spent_time = (end - start) * 1000
-            # print(f"{name}: result={res}, time={spent_time:.4f} ms")
+            print(f"{name}: result={res}, time={spent_time:.4f} ms")
             results[name] = res
             self.results[name].append(spent_time)
         
@@ -107,16 +107,10 @@ class Test:
         plt.legend()
         plt.show()
     
-
-sizes = [10]
-# for size in sizes:
-#     t.timer(size)
-
 t = Test()
 i = 10
 while i<=10_000:
     t.timer(i)
     i = int(i*1.02) + 1
-    # i *= 2
 
 t.plot_results()
