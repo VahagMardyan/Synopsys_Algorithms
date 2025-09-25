@@ -2,8 +2,6 @@ from main import *
 import random, time
 import csv
 
-
-
 def generate_list(n:int, min_val:int = 0, max_val:int = 10_000) -> list:
     return [ random.randint(min_val, max_val) for _ in range(n) ]
 
