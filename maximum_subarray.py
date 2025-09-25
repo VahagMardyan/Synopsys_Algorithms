@@ -1,5 +1,6 @@
 from random import randint
 import time
+import matplotlib.pyplot as plt
 
 # # Brute-force algorithm O(n²)
 def max_subarray_brute_force(arr:list):
@@ -52,11 +53,8 @@ def max_subarray_kadane(arr:list):
     max_so_far = arr[0]
     max_ending_here = arr[0]
     for i in range(1, len(arr)):
-        max_ending_here += arr[i]
-        if max_ending_here < arr[i]:
-            max_ending_here = arr[i]
-        if max_ending_here > max_so_far:
-            max_so_far = max_ending_here
+        max_ending_here = max(arr[i], max_ending_here + arr[i])
+        max_so_far = max(max_so_far, max_ending_here)
     return max_so_far
 
 class Test:
@@ -66,6 +64,12 @@ class Test:
             "Kadane":max_subarray_kadane,
             "Brute-force":max_subarray_brute_force,
         }
+        self.results = {
+            "Divide and conquer": [],
+            "Kadane": [],
+            "Brute-force": [],
+        }
+        self.sizes = []
 
     def generate_array(self,size:int):
         return [ randint(-10_000, 10_000) for _ in range(size) ]
@@ -75,20 +79,44 @@ class Test:
         print(f"\nArray size: {len(arr)}")
         results = {}
         for name, func in self.algorithms.items():
-            if name == "Brute-force" and size > 5000:
-                print(f"{name}: skipped (too slow)")
-                continue
+            # if name == "Brute-force" and size > 5000:
+            #     print(f"{name}: skipped (too slow)")
+            #     self.results[name].append(float('inf'))
+            #     continue
             start = time.perf_counter()
             res = func(arr)
             end = time.perf_counter()
             spent_time = (end - start) * 1000
-            print(f"{name}: result={res}, time={spent_time:.4f} ms")
+            # print(f"{name}: result={res}, time={spent_time:.4f} ms")
             results[name] = res
+            self.results[name].append(spent_time)
+        
+        self.sizes.append(size)
 
         # # Check correctness
         if len(results) > 1 and len(set(results.values())) > 1:
-            print("Warning: mismatch between algorithms!")  
+            print("Warning: mismatch between algorithms!")
+
+    def plot_results(self):
+        for name, times in self.results.items():
+            plt.plot(self.sizes, times, marker="o", label = name)
+        plt.xlabel("Array size")
+        plt.ylabel("Execution time (ms)")
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.legend()
+        plt.show()
+    
+
+sizes = [10]
+# for size in sizes:
+#     t.timer(size)
 
 t = Test()
-for size in [10, 100, 1000, 5000, 10000]:
-    t.timer(size)
+i = 10
+while i<=10_000:
+    t.timer(i)
+    i = int(i*1.02) + 1
+    # i *= 2
+
+t.plot_results()
