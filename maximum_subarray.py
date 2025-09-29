@@ -60,14 +60,14 @@ def max_subarray_kadane(arr:list):
 class Test:
     def __init__(self):
         self.algorithms = {
-            "Divide and conquer": lambda arr :  find_max_subarray(arr, 0, len(arr)-1)[2],
-            "Kadane":max_subarray_kadane,
-            "Brute-force":max_subarray_brute_force,
+            "Divide and conquer O(nlog(n))": lambda arr :  find_max_subarray(arr, 0, len(arr)-1)[2],
+            "Kadane O(n)":max_subarray_kadane,
+            "Brute-force O(n²)":max_subarray_brute_force,
         }
         self.results = {
-            "Divide and conquer": [],
-            "Kadane": [],
-            "Brute-force": [],
+            "Divide and conquer O(nlog(n))": [],
+            "Kadane O(n)": [],
+            "Brute-force O(n²)": [],
         }
         self.sizes = []
 
@@ -111,6 +111,6 @@ t = Test()
 i = 10
 while i<=10_000:
     t.timer(i)
-    i = int(i*1.02) + 1
+    i = int(i*1.01) + 1
 
 t.plot_results()
