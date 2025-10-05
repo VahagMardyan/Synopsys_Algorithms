@@ -1,4 +1,4 @@
-from main import *
+from For_Algorithms.sorting_algorithms import *
 import random, time
 import csv
 
