@@ -1,6 +1,7 @@
 from random import randint
 import time
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # # Brute-force algorithm O(n²)
 def max_subarray_brute_force(arr:list):
@@ -65,10 +66,17 @@ class Test:
             "Brute-force O(n²)":max_subarray_brute_force,
         }
         self.results = {
+            "Array Size": [],
             "Divide and conquer O(nlog(n))": [],
             "Kadane O(n)": [],
             "Brute-force O(n²)": [],
         }
+        # self.results = {
+        #     "Array Size": [],
+        #     "Divide & Conquer (ms)": [],
+        #     "Kadane (ms)": [],
+        #     "Brute-force (ms)": [],
+        # }
         self.sizes = []
 
     def generate_array(self,size:int):
@@ -78,10 +86,13 @@ class Test:
         arr = self.generate_array(size)
         print(f"\nArray size: {len(arr)}")
         results = {}
+
+        self.results["Array Size"].append(size)
+
         for name, func in self.algorithms.items():
-            if name == "Brute-force" and size > 5000:
+            if name == "Brute-force O(n²)" and size > 5000:
                 print(f"{name}: skipped (too slow)")
-                self.results[name].append(float('inf'))
+                self.results[name].append(None)
                 continue
             start = time.perf_counter()
             res = func(arr)
@@ -97,9 +108,14 @@ class Test:
         if len(results) > 1 and len(set(results.values())) > 1:
             print("Warning: mismatch between algorithms!")
 
+    def save_to_excel(self, filename="results.xlsx"):
+        df = pd.DataFrame(self.results)
+        df.to_excel(filename, index=False)
+        print(f"Results saved to {filename}")
+
     def plot_results(self):
-        for name, times in self.results.items():
-            plt.plot(self.sizes, times, marker="o", label = name)
+        for name in self.algorithms.keys():
+            plt.plot(self.results["Array Size"], self.results[name], marker="o", label=name)
         plt.xlabel("Array size")
         plt.ylabel("Execution time (ms)")
         plt.xscale('log')
@@ -109,8 +125,10 @@ class Test:
     
 t = Test()
 i = 10
-while i<=10_000:
+while i<=1_000:
     t.timer(i)
     i = int(i*1.01) + 1
 
-t.plot_results()
+t.save_to_excel()
+
+# t.plot_results()
