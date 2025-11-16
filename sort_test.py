@@ -1,8 +1,19 @@
 from sorting_algorithms import merge_sort, insertion_sort
 from bubble_sort import bubble_sort
 from heap_sort import heapsort
+
 from random import randint
 import time
+import matplotlib.pyplot as plt
+import pandas as pd
+import math
+
+algs = {
+    "Insertion" : insertion_sort,
+    "Bubble" : bubble_sort,
+    "Merge" : lambda arr : merge_sort(arr, 0, len(arr) - 1),
+    "Heap" : heapsort
+}
 
 def is_sorted(arr:list) -> bool:
     return all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
@@ -10,39 +21,54 @@ def is_sorted(arr:list) -> bool:
 def generate_array(size:int) -> list:
     return [ randint(-10_000, 10_000) for _ in range(size) ]
     
-original = generate_array(50_000)
-print(f"Array size: {len(original)}\n")
+sizes = []
+n = 10_000
+while n <= 50_000:
+    sizes.append(n)
+    n = int(n * 1.01)
 
-# # Insertion sort O(n²)
-arr = original.copy()
-start = time.perf_counter()
-insertion_sort(arr)
-end = time.perf_counter()
-duration = (end - start) * 1000
-print(f"Algorithm name: Insertion sort | time={duration:.4f}ms | sorted={is_sorted(arr)}\n") # ≈56778.7527 ms ≈56 seconds
+print("Sizes: ", sizes)
 
-# # Bubble sort O(n²)
+results = []
 
-arr = original.copy()
-start = time.perf_counter()
-bubble_sort(arr)
-end = time.perf_counter()
-duration = (end - start) * 1000
-print(f"Algorithm name: Bubble sort | time={duration:.4f}ms | sorted={is_sorted(arr)}\n") # ≈134731.2737 ms=2.24 minutes
+for size in sizes:
+    print(f"\n=== Testing size {size} ===")
+    base_arr = generate_array(size)
+    for name, func in algs.items():
+        arr = base_arr.copy()
+        if name in ("Insertion", "Bubble") and size > 20_000:
+            print(f"Skipping {name} for size {size} (too slow)")
+            results.append((size, name, None))
+            continue
+        start = time.perf_counter()
+        func(arr)
+        end = time.perf_counter()
 
-# # Merge sort O(n*log(n))
+        ms = (end - start) * 1000
+        ok = is_sorted(arr)
+        print(f"{name:10s} | {ms:10.2f}ms | sorted={ok}")
+        results.append((size, name, ms))
 
-arr = original.copy()
-start = time.perf_counter()
-merge_sort(arr, 0, len(arr)-1)
-end = time.perf_counter()
-duration = (end - start) * 1000
-print(f"Algorithm name: Merge sort, time={duration:.4f}ms | sorted={is_sorted(arr)}\n") # ≈165.2721ms
+df = pd.DataFrame(results, columns=["Size", "Algorithm", "Time (ms)"])
+print(df)
 
-# # Heap sort O(n*log(n))
-arr = original.copy()
-start = time.perf_counter()
-heapsort(arr)
-end = time.perf_counter()
-duration = (end - start) * 1000
-print(f"Algorithm name: Heap sort, time={duration:.4f}ms | sorted={is_sorted(arr)}\n") # ≈165.2721ms
+plt.figure(figsize=(10,6))
+
+for name in algs.keys():
+    sub = df[df["Algorithm"] == name]
+    plt.plot(sub["Size"], sub["Time (ms)"], marker="o", label=name)
+
+plt.xlabel("Array size")
+plt.ylabel("Time (ms)")
+plt.title("Sorting Algorithms Performance (10% growth sizes)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+"""
+Insertion sort: O(n²)
+Bubble sort: O(n²)
+Merge sort: O(n*log₂(n))
+Heap sort: O(n*log₂)
+"""
+
