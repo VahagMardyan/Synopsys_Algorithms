@@ -6,7 +6,6 @@ from random import randint
 import time
 import matplotlib.pyplot as plt
 import pandas as pd
-import math
 
 algs = {
     "Insertion" : insertion_sort,
@@ -23,9 +22,11 @@ def generate_array(size:int) -> list:
     
 sizes = []
 n = 10_000
+factor = 0.1 # # growth factor, [0;1]
+
 while n <= 50_000:
     sizes.append(n)
-    n = int(n * 1.01)
+    n = int(n * (1+factor))
 
 print("Sizes: ", sizes)
 
@@ -60,7 +61,7 @@ for name in algs.keys():
 
 plt.xlabel("Array size")
 plt.ylabel("Time (ms)")
-plt.title("Sorting Algorithms Performance (10% growth sizes)")
+plt.title(f"Sorting Algorithms Performance ({factor*100}% growth sizes)")
 plt.legend()
 plt.grid(True)
 plt.show()
