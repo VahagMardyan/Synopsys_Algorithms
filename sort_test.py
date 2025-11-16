@@ -1,6 +1,7 @@
 from sorting_algorithms import merge_sort, insertion_sort
 from bubble_sort import bubble_sort
 from heap_sort import heapsort
+from quick_sort import quicksort
 
 from random import randint
 import time
@@ -11,7 +12,8 @@ algs = {
     "Insertion" : insertion_sort,
     "Bubble" : bubble_sort,
     "Merge" : lambda arr : merge_sort(arr, 0, len(arr) - 1),
-    "Heap" : heapsort
+    "Heap" : heapsort,
+    "Quick": lambda arr : quicksort(arr, 0, len(arr) - 1)
 }
 
 def is_sorted(arr:list) -> bool:
@@ -22,13 +24,13 @@ def generate_array(size:int) -> list:
     
 sizes = []
 n = 10_000
-factor = 0.1 # # growth factor, [0;1]
+factor = 0.1 # # growth factor, (0;1]
 
 while n <= 50_000:
     sizes.append(n)
     n = int(n * (1+factor))
 
-print("Sizes: ", sizes)
+print(f"Sizes: {sizes}\nSize growth factor: {factor*100}%")
 
 results = []
 
@@ -61,15 +63,17 @@ for name in algs.keys():
 
 plt.xlabel("Array size")
 plt.ylabel("Time (ms)")
-plt.title(f"Sorting Algorithms Performance ({factor*100}% growth sizes)")
+plt.title(f"Sorting Algorithms Performance ({factor*100}% growth size)")
 plt.legend()
 plt.grid(True)
 plt.show()
 
 """
+Time complexities (for average cases)
 Insertion sort: O(n²)
 Bubble sort: O(n²)
 Merge sort: O(n*log₂(n))
-Heap sort: O(n*log₂)
+Heap sort: O(n*log₂(n))
+Quick sort: O(n*log₂(n))
 """
 
