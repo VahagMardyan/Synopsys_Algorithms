@@ -55,6 +55,9 @@ for size in sizes:
 df = pd.DataFrame(results, columns=["Size", "Algorithm", "Time (ms)"])
 print(df)
 
+# df.to_excel("results.xlsx", index=False)
+# print("Saved to results.xlsx")
+
 plt.figure(figsize=(10,6))
 
 for name in algs.keys():
