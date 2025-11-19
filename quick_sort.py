@@ -1,4 +1,4 @@
-def swap(arr:list, i:list, j:list) -> None:
+def swap(arr:list, i:int, j:int) -> None:
     arr[i], arr[j] = arr[j], arr[i]
 
 def partition(arr:list, low:int, high:int) -> int:
