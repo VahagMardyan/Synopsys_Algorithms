@@ -2,6 +2,7 @@ from sorting_algorithms import merge_sort, insertion_sort
 from bubble_sort import bubble_sort
 from heap_sort import heapsort
 from quick_sort import quicksort
+from selection_sort import selectionsort
 
 from random import randint
 import time
@@ -11,9 +12,10 @@ import pandas as pd
 algs = {
     "Insertion" : insertion_sort,
     "Bubble" : bubble_sort,
+    "Selection" : selectionsort,
     "Merge" : lambda arr : merge_sort(arr, 0, len(arr) - 1),
     "Heap" : heapsort,
-    "Quick": lambda arr : quicksort(arr, 0, len(arr) - 1)
+    "Quick": lambda arr : quicksort(arr, 0, len(arr) - 1),
 }
 
 def is_sorted(arr:list) -> bool:
@@ -39,7 +41,7 @@ for size in sizes:
     base_arr = generate_array(size)
     for name, func in algs.items():
         arr = base_arr.copy()
-        if name in ("Insertion", "Bubble") and size > 20_000:
+        if name in ("Insertion", "Bubble", "Selection") and size > 20_000:
             print(f"Skipping {name} for size {size} (too slow)")
             results.append((size, name, None))
             continue
@@ -75,6 +77,7 @@ plt.show()
 Time complexities (for average cases)
 Insertion sort: O(n²)
 Bubble sort: O(n²)
+Selection sort: O(n²)
 Merge sort: O(n*log₂(n))
 Heap sort: O(n*log₂(n))
 Quick sort: O(n*log₂(n))
