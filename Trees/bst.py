@@ -131,6 +131,20 @@ class BinarySearchTree:
         """
         self.__inorder_helper(self.root)
         print()
+
+    def iterative_inorder(self):
+        print("Iterative Inorder:", end=" ")
+        stack = []
+        current = self.root
+
+        while current is not None or stack:
+            if current is not None:
+                stack.append(current)
+                current = current.left
+            else:
+                node = stack.pop()
+                print(node.val, end=" ")
+                current = node.right
     
     def preorder(self):
         """
@@ -138,6 +152,19 @@ class BinarySearchTree:
         """
         self.__preorder_helper(self.root)
         print()
+    
+    def iterative_preorder(self):
+        print("Iterative Preorder:", end=" ")
+        if self.root is None:
+            return
+        stack = [self.root]
+        while stack:
+            node = stack.pop()
+            print(node.val, end=" ")
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
 
     def postorder(self):
         """
@@ -146,9 +173,26 @@ class BinarySearchTree:
         self.__postorder_helper(self.root)
         print()
 
+    def iterative_postorder(self):
+        print("Iterative Postorder: ", end=" ")
+        if self.root is None:
+            return
+        stack = [self.root]
+        values = []
+        while stack:
+            node = stack.pop()
+            values.append(node.val)
+            if node.left:
+                stack.append(node.left)
+            if node.right:
+                stack.append(node.right)
+        values.reverse()
+        for i in values:
+            print(i, end=" ")
+
     def successor(self, x:Node = "not_given"):
         """
-        Finds the smallest node greater than given x.
+        Finds the smallest node greater than the given node.
         """
         if x == "not_given":
             x = self.root
@@ -167,7 +211,7 @@ class BinarySearchTree:
 
     def predecessor(self, x:Node = "not_given"):
         """
-        Finds the largest node less than given x.
+        Finds the largest node less than given node.
         """
         if x == "not_given":
             x = self.root
@@ -183,57 +227,6 @@ class BinarySearchTree:
             x = y
             y = y.parent
         return y
-    
-
-def iterative_search(x:Node, k):
-    while x is not None and k != x.val:
-        if k < x.val:
-            x = x.left
-        else:
-            x = x.right
-    
-    return x if x else None
-        
-def iterative_inorder(x:BinarySearchTree):
-    stack = []
-    current = x.root
-
-    while current is not None or stack:
-        if current is not None:
-            stack.append(current)
-            current = current.left
-        else:
-            node = stack.pop()
-            print(node.val, end=" ")
-            current = node.right
-
-def iterative_preorder(x:BinarySearchTree):
-    if x.root is None:
-        return
-    stack = [x.root]
-    while stack:
-        node = stack.pop()
-        print(node.val, end=" ")
-        if node.right:
-            stack.append(node.right)
-        if node.left:
-            stack.append(node.left)
-    
-def iterative_postorder(x:BinarySearchTree):
-    if x.root is None:
-        return
-    stack = [x.root]
-    values = []
-    while stack:
-        node = stack.pop()
-        values.append(node.val)
-        if node.left:
-            stack.append(node.left)
-        if node.right:
-            stack.append(node.right)
-    values.reverse()
-    for i in values:
-        print(i, end=" ")
 
 r = BinarySearchTree()
 
@@ -243,25 +236,24 @@ r = BinarySearchTree()
 for val in [9, 7, 15, 4, 8, 2, 5, 10, 17, 16]:
     r.insert(val)
 
-# r.delete(r.search(17))
+r.delete(r.search(17))
 
 print("Inorder: ")
-iterative_inorder(r)
+r.iterative_inorder()
 print()
 r.inorder()
 
 print("Preorder: ")
-iterative_preorder(r)
+r.iterative_preorder()
 print()
 r.preorder()
 
 print("Postorder: ")
-iterative_postorder(r)
+r.iterative_postorder()
 print()
 r.postorder()
 
 print(f"Found: {r.search(15).val}")
-print(iterative_search(r.root, 15).val)
 
 print("Min:",r.minimum().val)
 print("Max:",r.maximum().val)
