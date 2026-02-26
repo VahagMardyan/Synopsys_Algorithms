@@ -29,6 +29,12 @@ class BinarySearchTree:
             print(node.val, end=" ")
             self.__inorder_helper(node.right)
 
+    def __reverser_inorder_helper(self, node:Node):
+        if node:
+            self.__reverser_inorder_helper(node.right)
+            print(node.val, end=" ")
+            self.__reverser_inorder_helper(node.left)
+
     def __preorder_helper(self, node:Node):
         if node:
             print(node.val, end=" ")
@@ -145,6 +151,26 @@ class BinarySearchTree:
                 node = stack.pop()
                 print(node.val, end=" ")
                 current = node.right
+
+    def reversed_inorder(self):
+        """
+        Reversed Inorder -> right, root, left
+        """
+        self.__reverser_inorder_helper(self.root)
+        print()
+
+    def iterative_reversed_inorder(self):
+        print("Iterative Reversed Inorder:", end=" ")
+        stack = []
+        current = self.root
+        while current is not None or stack:
+            if current is not None:
+                stack.append(current)
+                current = current.right
+            else:
+                node = stack.pop()
+                print(node.val, end=" ")
+                current = node.left
     
     def preorder(self):
         """
@@ -302,6 +328,9 @@ def LCA_binary_search_tree(node:Node, u:Node, v:Node) -> Node:
 
 # for val in [9, 7, 15, 4, 8, 2, 5, 10, 17]:
 #     r.insert(val)
+
+# r.reversed_inorder()
+# r.iterative_reversed_inorder()
 
 # r.delete(r.search(17))
 
