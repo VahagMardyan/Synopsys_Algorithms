@@ -268,6 +268,17 @@ class BinarySearchTree:
             self.__print_tree(node.right, level+1)
             print(" " * 8 * level + "->", node.val)
             self.__print_tree(node.left, level+1)
+
+    def is_valid_tree(self) -> bool:
+        return self.__is_valid_helper(self.root, float("-inf"), float("inf"))
+
+    def __is_valid_helper(self, node:Node, min_val, max_val) -> bool:
+        if node is None:
+            return True
+        if not (min_val < node.val < max_val):
+            return False
+        return self.__is_valid_helper(node.left, min_val, max_val) and \
+               self.__is_valid_helper(node.right, min_val, max_val)
     
 def LCA_binary_search_tree(node:Node, u:Node, v:Node) -> Node:
     """
@@ -284,13 +295,13 @@ def LCA_binary_search_tree(node:Node, u:Node, v:Node) -> Node:
 
     return node
 
-r = BinarySearchTree()
+# r = BinarySearchTree()
 
 # for val in [100, 20, 200, 10, 30, 150, 300]:
 #     r.insert(val)
 
-for val in [9, 7, 15, 4, 8, 2, 5, 10, 17]:
-    r.insert(val)
+# for val in [9, 7, 15, 4, 8, 2, 5, 10, 17]:
+#     r.insert(val)
 
 # r.delete(r.search(17))
 
@@ -324,9 +335,9 @@ for val in [9, 7, 15, 4, 8, 2, 5, 10, 17]:
 
 # print(lca.val)
 
-r.insert(18)
+# r.insert(18)
 
 # r.delete(r.search(15))
 # r.preorder()
 
-r.display()
+# r.display()
