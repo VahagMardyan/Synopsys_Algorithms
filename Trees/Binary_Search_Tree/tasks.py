@@ -74,4 +74,20 @@ def dfs(node:Node):
     return current_sum, current_count, current_res
 
 sm, cnt, result = dfs(r.search(13))
-print(sm, cnt, result) # 40 3 3
+# print(sm, cnt, result) # 40 3 3
+
+r = BinarySearchTree()
+
+for val in [15,18,17,20,6,3,7,13,9,2,4]:
+    r.insert(val)
+
+# r.display()
+r.insert(14)
+
+# r.display()
+
+r.delete(r.search(6))
+r.display()
+
+# # print(r.predecessor(r.search(13)).val)
+# # print(r.minimum(r.search(13)).val)

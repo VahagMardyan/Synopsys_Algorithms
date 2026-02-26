@@ -286,6 +286,7 @@ class BinarySearchTree:
     
     def display(self):
         print("\n--- BST Structure ---")
+        print("\nThe most left one is ROOT")
         self.__print_tree(self.root, 0)
         print("---------------------\n")
 
