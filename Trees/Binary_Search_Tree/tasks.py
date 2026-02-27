@@ -91,3 +91,53 @@ r.display()
 
 # # print(r.predecessor(r.search(13)).val)
 # # print(r.minimum(r.search(13)).val)
+
+# r = BinarySearchTree()
+
+# for val in [100, 20, 200, 10, 30, 150, 300]:
+#     r.insert(val)
+
+# for val in [9, 7, 15, 4, 8, 2, 5, 10, 17]:
+#     r.insert(val)
+
+# r.reversed_inorder()
+# r.iterative_reversed_inorder()
+
+# r.delete(r.search(17))
+
+# print("Inorder: ")
+# r.iterative_inorder()
+# print()
+# r.inorder()
+
+# print("Preorder: ")
+# r.iterative_preorder()
+# print()
+# r.preorder()
+
+# print("Postorder: ")
+# r.iterative_postorder()
+# print()
+# r.postorder()
+
+# print(f"Found: {r.search(15).val}")
+
+# print("Min:",r.minimum().val)
+# print("Max:",r.maximum().val)
+# print("Successor:", r.successor().val) # # root:9 ->  10
+# print("Predecessor:", r.predecessor().val) # # root:9 -> 8
+
+# print(r.search(25))
+# print(r.successor(r.search(35)))
+# print(r.successor(r.search(28)))
+
+# lca = r.LCA(r.search(2), r.search(8))
+
+# print(lca.val)
+
+# r.insert(18)
+
+# r.delete(r.search(15))
+# r.preorder()
+
+# r.display()

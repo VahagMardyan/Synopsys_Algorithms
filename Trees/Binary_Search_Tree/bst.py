@@ -20,34 +20,37 @@ class Node:
         self.val = key
 
 class BinarySearchTree:
+    """
+    node.left < node <= node.right
+    """
     def __init__(self):
         self.root = None
 
-    def __inorder_helper(self, node:Node):
+    def __inorder_helper(self, node:Node) -> None:
         if node:
             self.__inorder_helper(node.left)
             print(node.val, end=" ")
             self.__inorder_helper(node.right)
 
-    def __reverser_inorder_helper(self, node:Node):
+    def __reverser_inorder_helper(self, node:Node) -> None:
         if node:
             self.__reverser_inorder_helper(node.right)
             print(node.val, end=" ")
             self.__reverser_inorder_helper(node.left)
 
-    def __preorder_helper(self, node:Node):
+    def __preorder_helper(self, node:Node) -> None:
         if node:
             print(node.val, end=" ")
             self.__preorder_helper(node.left)
             self.__preorder_helper(node.right)
 
-    def __postorder_helper(self, node:Node):
+    def __postorder_helper(self, node:Node) -> None:
         if node:
             self.__postorder_helper(node.left)
             self.__postorder_helper(node.right)
             print(node.val, end=" ")
 
-    def _transplant(self, u:Node, v:Node):
+    def _transplant(self, u:Node, v:Node) -> None:
         if u.parent is None:
             self.root = v
         elif u == u.parent.left:
@@ -57,7 +60,7 @@ class BinarySearchTree:
         if v is not None:
             v.parent = u.parent
 
-    def height(self, x:Node = "not_given"):
+    def height(self, x:Node = "not_given") -> int:
         if x == "not_given":
             x = self.root
         if x is None:
@@ -66,7 +69,7 @@ class BinarySearchTree:
         right_h = self.height(x.right)
         return 1 + max(left_h, right_h)
     
-    def search(self, k):
+    def search(self, k) -> int:
         current = self.root
         while current is not None and k != current.val:
             if k < current.val:
@@ -75,7 +78,7 @@ class BinarySearchTree:
                 current = current.right
         return current if current else None
     
-    def minimum(self, x:Node = "not_given"):
+    def minimum(self, x:Node = "not_given") -> Node:
         if x == "not_given":
             x = self.root
         if x is None:
@@ -85,7 +88,7 @@ class BinarySearchTree:
             current = current.left
         return current
     
-    def maximum(self, x:Node = "not_given"):
+    def maximum(self, x:Node = "not_given") -> Node:
         if x == "not_given":
             x = self.root
         if x is None:
@@ -95,7 +98,7 @@ class BinarySearchTree:
             current = current.right
         return current
 
-    def insert(self, key):
+    def insert(self, key) -> Node:
         z = Node(key)
         y = None
         x = self.root
@@ -113,7 +116,7 @@ class BinarySearchTree:
         else:
             y.right = z
     
-    def delete(self, z:Node):
+    def delete(self, z:Node) -> Node:
         if z is None:
             return
         
@@ -131,14 +134,14 @@ class BinarySearchTree:
             y.left = z.left
             y.left.parent = y
 
-    def inorder(self):
+    def inorder(self) -> None:
         """
         Inorder -> left, root, right
         """
         self.__inorder_helper(self.root)
         print()
 
-    def iterative_inorder(self):
+    def iterative_inorder(self) -> None:
         print("Iterative Inorder:", end=" ")
         stack = []
         current = self.root
@@ -152,14 +155,14 @@ class BinarySearchTree:
                 print(node.val, end=" ")
                 current = node.right
 
-    def reversed_inorder(self):
+    def reversed_inorder(self) -> None:
         """
         Reversed Inorder -> right, root, left
         """
         self.__reverser_inorder_helper(self.root)
         print()
 
-    def iterative_reversed_inorder(self):
+    def iterative_reversed_inorder(self) -> None:
         print("Iterative Reversed Inorder:", end=" ")
         stack = []
         current = self.root
@@ -172,14 +175,14 @@ class BinarySearchTree:
                 print(node.val, end=" ")
                 current = node.left
     
-    def preorder(self):
+    def preorder(self) -> None:
         """
         Preorder -> root, left, right
         """
         self.__preorder_helper(self.root)
         print()
     
-    def iterative_preorder(self):
+    def iterative_preorder(self) -> None:
         print("Iterative Preorder:", end=" ")
         if self.root is None:
             return
@@ -192,14 +195,14 @@ class BinarySearchTree:
             if node.left:
                 stack.append(node.left)
 
-    def postorder(self):
+    def postorder(self) -> None:
         """
         Postorder -> left, right, root
         """
         self.__postorder_helper(self.root)
         print()
 
-    def iterative_postorder(self):
+    def iterative_postorder(self) -> None:
         print("Iterative Postorder: ", end=" ")
         if self.root is None:
             return
@@ -216,7 +219,7 @@ class BinarySearchTree:
         for i in values:
             print(i, end=" ")
 
-    def successor(self, x:Node = "not_given"):
+    def successor(self, x:Node = "not_given") -> Node:
         """
         Finds the smallest node greater than the given node.
         """
@@ -235,7 +238,7 @@ class BinarySearchTree:
             y = y.parent
         return y
 
-    def predecessor(self, x:Node = "not_given"):
+    def predecessor(self, x:Node = "not_given") -> Node:
         """
         Finds the largest node less than given node.
         """
@@ -284,7 +287,7 @@ class BinarySearchTree:
             v = v.parent
         return u
     
-    def display(self):
+    def display(self) -> None:
         print("\n--- BST Structure ---")
         print("\nThe most left one is ROOT")
         self.__print_tree(self.root, 0)
@@ -322,52 +325,3 @@ def LCA_binary_search_tree(node:Node, u:Node, v:Node) -> Node:
 
     return node
 
-# r = BinarySearchTree()
-
-# for val in [100, 20, 200, 10, 30, 150, 300]:
-#     r.insert(val)
-
-# for val in [9, 7, 15, 4, 8, 2, 5, 10, 17]:
-#     r.insert(val)
-
-# r.reversed_inorder()
-# r.iterative_reversed_inorder()
-
-# r.delete(r.search(17))
-
-# print("Inorder: ")
-# r.iterative_inorder()
-# print()
-# r.inorder()
-
-# print("Preorder: ")
-# r.iterative_preorder()
-# print()
-# r.preorder()
-
-# print("Postorder: ")
-# r.iterative_postorder()
-# print()
-# r.postorder()
-
-# print(f"Found: {r.search(15).val}")
-
-# print("Min:",r.minimum().val)
-# print("Max:",r.maximum().val)
-# print("Successor:", r.successor().val) # # root:9 ->  10
-# print("Predecessor:", r.predecessor().val) # # root:9 -> 8
-
-# print(r.search(25))
-# print(r.successor(r.search(35)))
-# print(r.successor(r.search(28)))
-
-# lca = r.LCA(r.search(2), r.search(8))
-
-# print(lca.val)
-
-# r.insert(18)
-
-# r.delete(r.search(15))
-# r.preorder()
-
-# r.display()

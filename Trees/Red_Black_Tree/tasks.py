@@ -5,13 +5,13 @@ nums = [10, 20, 30, 15, 25, 5, 1]
 
 for n in nums:
     # print(f"\nAdding {n}:")
-    r.insert(Node(n))
+    r.insert(n)
 
+# r.display()
+
+r.insert(4)
 r.display()
-
 print()
-r.insert(Node(4))
-r.display()
 
 r.delete(r.search(4))
 r.display()
@@ -26,3 +26,6 @@ r.display()
 #     r.root.left.color = True # # breaks 5th rule (const black-height)
 
 # print(r.is_valid_tree()) # False
+
+result = r.search_with_color(5)
+print(result)

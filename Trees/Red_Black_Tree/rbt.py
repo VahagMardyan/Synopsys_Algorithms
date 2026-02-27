@@ -23,10 +23,10 @@ class Red_Black_Tree:
     def __init__(self):
         self.root = None
 
-    def __get_height(self, node:Node):
+    def __get_height(self, node:Node) -> int:
         return node.height if node else -1
     
-    def __update_height(self, node:Node):
+    def __update_height(self, node:Node) -> None:
         if node:
             node.height = 1 + max(self.__get_height(node.left), self.__get_height(node.right))
 
@@ -69,7 +69,7 @@ class Red_Black_Tree:
         self.__update_height(z)
 
 
-    def __insert_fixup(self, z:Node):
+    def __insert_fixup(self, z:Node) -> None:
         while z.parent and z.parent.parent and z.parent.color == False:
             if z.parent == z.parent.parent.left:
                 y = z.parent.parent.right # # uncle
@@ -111,9 +111,10 @@ class Red_Black_Tree:
                     self.left_rotate(z.parent.parent)
         self.root.color = True
     
-    def insert(self, z:Node):
+    def insert(self, key) -> None:
         x = self.root
         y = None
+        z = Node(key)
         while x is not None:
             y = x
             if z.val < x.val:
@@ -138,7 +139,7 @@ class Red_Black_Tree:
         
         self.__insert_fixup(z)
 
-    def display(self, node:Node = None, indent = "", last = True):
+    def display(self, node:Node = None, indent = "", last = True) -> None:
         if node is None:
             node = self.root
         
@@ -162,7 +163,7 @@ class Red_Black_Tree:
             for i, (child, is_last) in enumerate(children):
                 self.display(child, indent, is_last)
 
-    def __transplant(self, u:Node, v:Node):
+    def __transplant(self, u:Node, v:Node) -> None:
         if u.parent is None:
             self.root = v
         elif u == u.parent.left:
@@ -172,7 +173,7 @@ class Red_Black_Tree:
         if v is not None:
             v.parent = u.parent
 
-    def delete(self, z: Node):
+    def delete(self, z: Node) -> None:
         y = z
         y_original_color = y.color
         if z.left is None:
@@ -210,7 +211,7 @@ class Red_Black_Tree:
         if y_original_color == True:
             self.__delete_fixup(x, parent_to_update)
 
-    def __delete_fixup(self, x: Node, parent: Node):
+    def __delete_fixup(self, x: Node, parent: Node) -> None:
         while x != self.root and (x is None or x.color == True):
 
             if x == parent.left or (x is None and parent.left is None):
@@ -260,9 +261,10 @@ class Red_Black_Tree:
                         if w.left: w.left.color = True
                         self.right_rotate(parent)
                     x = self.root
-        if x: x.color = True    
+        if x: 
+            x.color = True    
 
-    def minimum(self, x:Node = "not_given"):
+    def minimum(self, x:Node = "not_given") -> Node:
         if x == "not_given":
             x = self.root
         if x is None:
@@ -272,7 +274,7 @@ class Red_Black_Tree:
             current = current.left
         return current
     
-    def maximum(self, x:Node = "not_given"):
+    def maximum(self, x:Node = "not_given") -> Node:
         if x == "not_given":
             x = self.root
         if x is None:
@@ -282,7 +284,7 @@ class Red_Black_Tree:
             current = current.right
         return current
     
-    def search(self, k):
+    def search(self, k) -> Node:
         current = self.root
         while current is not None and k != current.val:
             if k < current.val:
@@ -291,14 +293,26 @@ class Red_Black_Tree:
                 current = current.right
         return current
     
-    def height(self, x:Node = "not_given"):
+    def search_with_color(self, k) -> dict:
+        current = self.root
+        while current and k != current.val:
+            if k < current.val:
+                current = current.left
+            else:
+                current = current.right
+        return {
+            "Node" : current,
+            "Color" : "BLACK" if current.color else "RED"
+        }
+    
+    def height(self, x:Node = "not_given") -> int:
         if x == "not_given":
             x = self.root
         if x is None:
             return -1
         return x.height
     
-    def black_height(self, x:Node = None):
+    def black_height(self, x:Node = None) -> int:
         if x is None:
             x = self.root
         h = 1 # None (Nil) is included
@@ -321,7 +335,7 @@ class Red_Black_Tree:
 
         return self.__check_rules(self.root, 0, target_black_height)
     
-    def __check_rules(self, node:Node, current_black_count:int, target_bh:int):
+    def __check_rules(self, node:Node, current_black_count:int, target_bh:int) -> bool:
         if node is None:
             # # When we reach to None (NIL), check rule 5 (NIL Included)
             return current_black_count + 1 == target_bh
