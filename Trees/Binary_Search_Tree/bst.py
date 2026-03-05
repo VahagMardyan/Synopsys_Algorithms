@@ -97,7 +97,7 @@ class BinarySearchTree:
         while current.right is not None:
             current = current.right
         return current
-
+    
     def insert(self, key) -> Node:
         z = Node(key)
         y = None
