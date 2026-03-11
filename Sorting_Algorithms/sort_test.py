@@ -3,6 +3,9 @@ from bubble_sort import bubble_sort
 from heap_sort import heapsort
 from quick_sort import quicksort
 from selection_sort import selectionsort
+from counting_sort import countsort
+from radix_sort import radixsort
+from funny_sorts import stalin_sort
 
 from random import randint
 import time
@@ -16,6 +19,9 @@ algs = {
     "Merge" : lambda arr : merge_sort(arr, 0, len(arr) - 1),
     "Heap" : heapsort,
     "Quick": lambda arr : quicksort(arr, 0, len(arr) - 1),
+    "Counting" : countsort,
+    "Radix" : radixsort,
+    "Stalin" : stalin_sort
 }
 
 def is_sorted(arr:list) -> bool:
@@ -28,7 +34,7 @@ sizes = []
 n = 10_000
 factor = 0.1 # # growth factor, (0;1]
 
-while n <= 50_000:
+while n <= 20_000:
     sizes.append(n)
     n = int(n * (1+factor))
 
@@ -46,12 +52,13 @@ for size in sizes:
             results.append((size, name, None))
             continue
         start = time.perf_counter()
-        func(arr)
+        sorted_res = func(arr)
         end = time.perf_counter()
-
         ms = (end - start) * 1000
+        if sorted_res is not None:
+            arr = sorted_res
         ok = is_sorted(arr)
-        print(f"{name:10s} | {ms:10.2f}ms | sorted={ok}")
+        print(f"{name:10s} | {ms:10.2f}ms | sorted={ok} | size={len(arr)}")
         results.append((size, name, ms))
 
 df = pd.DataFrame(results, columns=["Size", "Algorithm", "Time (ms)"])
@@ -81,5 +88,12 @@ Selection sort: O(n²)
 Merge sort: O(n*log₂(n))
 Heap sort: O(n*log₂(n))
 Quick sort: O(n*log₂(n))
+Counting sort: O(n+k) where
+    n -> The number of elements
+    k -> The range of the input values k=max-min+1
+Radix sort : O(d*(n+b)) where 
+    n -> The number of elements, 
+    d -> The number of digits in the largest number
+    b -> The base of the number system being used (decimal, bin, oct, hex, ...). In our example b=10
 """
 
