@@ -1,5 +1,6 @@
-from sorting_algorithms import merge_sort, insertion_sort
+from insertion_sort import insertion_sort
 from bubble_sort import bubble_sort
+from merge_sort import merge_sort
 from heap_sort import heapsort
 from quick_sort import quicksort
 from selection_sort import selectionsort
@@ -96,4 +97,3 @@ Radix sort : O(d*(n+b)) where
     d -> The number of digits in the largest number
     b -> The base of the number system being used (decimal, bin, oct, hex, ...). In our example b=10
 """
-
