@@ -1,7 +1,12 @@
+from random import randint
+
 def swap(arr:list, i:int, j:int) -> None:
     arr[i], arr[j] = arr[j], arr[i]
 
 def partition(arr:list, low:int, high:int) -> int:
+    """Randomized Partition"""
+    random_idx = randint(low, high)
+    swap(arr, random_idx, high)
     pivot = arr[high]
     i = low - 1
     for j in range(low, high):
