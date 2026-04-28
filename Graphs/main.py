@@ -7,7 +7,6 @@ class Color(Enum):
     BLACK = 2
 
 class Vertex:
-    # # Colors: 0->white, 1->gray, 2->black
     def __init__(self, name):
         self.name = name
         self.color = Color.WHITE
