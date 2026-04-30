@@ -1,5 +1,7 @@
 from collections import deque
 from enum import Enum
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Color(Enum):
     WHITE = 0
@@ -7,17 +9,20 @@ class Color(Enum):
     BLACK = 2
 
 class Vertex:
-    def __init__(self, name):
-        self.name = name
-        self.color = Color.WHITE
-        self.d = float("inf") # # distance
-        self.p = None # # predecessor
-        self.f = 0 # # Finish time
+    def __init__(self, name:str):
+        self.name:str = name
+        self.color:Color = Color.WHITE
+        self.d:float = float("inf") # # distance
+        self.p:Vertex = None # # predecessor
+        self.f:float = 0 # # Finish time
+    
+    def __repr__(self):
+        return self.name
 
 class Graph:
-    def __init__(self, adj_list):
-        self.adj = adj_list
-        self.time = 0
+    def __init__(self, adj_list:dict):
+        self.adj:dict = adj_list
+        self.time:float = 0
 
     def BFS(self, s:Vertex):
         """
@@ -70,6 +75,81 @@ class Graph:
         self.time += 1
         u.f = self.time
 
+    def undirected_visualisation(self):
+        """
+            Undirected graph visualisation
+        """
+        G = nx.Graph()
+        node_colors = []
+
+        for u, neighbors in self.adj.items():
+            G.add_node(u)
+            for v in neighbors:
+                G.add_edge(u,v)
+        
+        for node in G.nodes():
+            if node.color == Color.WHITE:
+                node_colors.append("white")
+            elif node.color == Color.GRAY:
+                node_colors.append("lightgray")
+            elif node.color == Color.BLACK:
+                node_colors.append("black")
+
+        plt.figure(figsize=(8,6))
+        nx.draw(G,
+                with_labels=True,
+                node_color=node_colors,
+                node_size=2000,
+                font_size=16,
+                font_weight="bold",
+                edge_color='gray',
+                edgecolors='black',
+                font_color='orange'
+            )
+        plt.title("Graph Visualisation (Current State)")
+        plt.show()
+
+    def directed_visualisation(self, title_suffix=""):
+        """
+            Directed graph visualisation
+        """
+        G = nx.DiGraph() 
+        
+        for u, neighbors in self.adj.items():
+            G.add_node(u)
+            for v in neighbors:
+                G.add_edge(u, v)
+
+        node_colors = []
+        for node in G.nodes():
+            if node.color == Color.WHITE:
+                node_colors.append('white')
+            elif node.color == Color.GRAY:
+                node_colors.append('lightgray')
+            elif node.color == Color.BLACK:
+                node_colors.append('black')
+
+        plt.figure(figsize=(10, 8))
+        
+        pos = nx.spring_layout(G)
+
+        nx.draw(G, pos,
+                with_labels=True,
+                node_color=node_colors,
+                node_size=2000,
+                font_size=16,
+                font_weight='bold',
+                edge_color='gray',
+                edgecolors='black',
+                font_color='orange',
+                arrows=True,
+                arrowsize=30,
+                connectionstyle='arc3,rad=0.1'
+        )
+
+        plt.title(f"Directed Graph Visualization {title_suffix}")
+        plt.show()
+
 a = Vertex("A")
 b = Vertex("B")
 c = Vertex("C")
@@ -103,5 +183,8 @@ adj_map = {
 }
 
 g = Graph(adj_map)
-g.BFS(c)
-print(e.d)
+# g.DFS()
+g.directed_visualisation()
+# g.undirected_visualisation()
+# print(e.d)
+
