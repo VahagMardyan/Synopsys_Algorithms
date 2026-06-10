@@ -1,163 +1,13 @@
-from collections import deque
-from enum import Enum
-import networkx as nx
-import matplotlib.pyplot as plt
+from graphs import *
 
-class Color(Enum):
-    WHITE = 0
-    GRAY = 1
-    BLACK = 2
-
-class Vertex:
-    def __init__(self, name:str):
-        self.name:str = name
-        self.color:Color = Color.WHITE
-        self.d:float = float("inf") # # distance
-        self.p:Vertex = None # # predecessor
-        self.f:float = 0 # # Finish time
-    
-    def __repr__(self):
-        return self.name
-
-class Graph:
-    def __init__(self, adj_list:dict):
-        self.adj:dict = adj_list
-        self.time:float = 0
-
-    def BFS(self, s:Vertex):
-        """
-            Breadth-First-Search
-        """
-        for u in self.adj:
-            if u != s:
-                u.color = Color.WHITE
-                u.d = float("inf")
-                u.p = None
-        
-        s.color = Color.GRAY
-        s.d = 0
-        s.p = None
-        
-        Q = deque([s])
-        while Q:
-            u = Q.popleft()
-
-            for v in self.adj[u]:
-                if v.color == Color.WHITE:
-                    v.color = Color.GRAY
-                    v.d = u.d + 1
-                    v.p = u
-                    Q.append(v)
-
-            u.color = Color.BLACK
-
-    def DFS(self):
-        """
-            Depth-First-Search
-        """
-        for u in self.adj:
-            u.color = Color.WHITE
-            u.p = None
-        self.time = 0
-        for u in self.adj:
-            if u.color == Color.WHITE:
-                self.__dfs_visit__(u)
-
-    def __dfs_visit__(self, u:Vertex):
-        self.time += 1
-        u.d = self.time
-        u.color = Color.GRAY
-        for v in self.adj[u]:
-            if v.color == Color.WHITE:
-                v.p = u
-                self.__dfs_visit__(v)
-        u.color = Color.BLACK
-        self.time += 1
-        u.f = self.time
-
-    def undirected_visualisation(self):
-        """
-            Undirected graph visualisation
-        """
-        G = nx.Graph()
-        node_colors = []
-
-        for u, neighbors in self.adj.items():
-            G.add_node(u)
-            for v in neighbors:
-                G.add_edge(u,v)
-        
-        for node in G.nodes():
-            if node.color == Color.WHITE:
-                node_colors.append("white")
-            elif node.color == Color.GRAY:
-                node_colors.append("lightgray")
-            elif node.color == Color.BLACK:
-                node_colors.append("black")
-
-        plt.figure(figsize=(8,6))
-        nx.draw(G,
-                with_labels=True,
-                node_color=node_colors,
-                node_size=2000,
-                font_size=16,
-                font_weight="bold",
-                edge_color='gray',
-                edgecolors='black',
-                font_color='orange'
-            )
-        plt.title("Graph Visualisation (Current State)")
-        plt.show()
-
-    def directed_visualisation(self, title_suffix=""):
-        """
-            Directed graph visualisation
-        """
-        G = nx.DiGraph() 
-        
-        for u, neighbors in self.adj.items():
-            G.add_node(u)
-            for v in neighbors:
-                G.add_edge(u, v)
-
-        node_colors = []
-        for node in G.nodes():
-            if node.color == Color.WHITE:
-                node_colors.append('white')
-            elif node.color == Color.GRAY:
-                node_colors.append('lightgray')
-            elif node.color == Color.BLACK:
-                node_colors.append('black')
-
-        plt.figure(figsize=(10, 8))
-        
-        pos = nx.spring_layout(G)
-
-        nx.draw(G, pos,
-                with_labels=True,
-                node_color=node_colors,
-                node_size=2000,
-                font_size=16,
-                font_weight='bold',
-                edge_color='gray',
-                edgecolors='black',
-                font_color='orange',
-                arrows=True,
-                arrowsize=30,
-                connectionstyle='arc3,rad=0.1'
-        )
-
-        plt.title(f"Directed Graph Visualization {title_suffix}")
-        plt.show()
-
-a = Vertex("A")
-b = Vertex("B")
-c = Vertex("C")
-d = Vertex("D")
-e = Vertex("E")
-f = Vertex("F")
-h = Vertex("H")
-x = Vertex("X")
+# a = Vertex("A")
+# b = Vertex("B")
+# c = Vertex("C")
+# d = Vertex("D")
+# e = Vertex("E")
+# f = Vertex("F")
+# h = Vertex("H")
+# x = Vertex("X")
 
 """ Adjacency Matrix
     A|B|C|D|E|F|H|X|
@@ -171,20 +21,97 @@ H   0|0|1|0|0|0|0|0|
 X   1|0|0|0|0|0|0|0|
 """
 
-adj_map = {
-    a: [b,c],
-    b: [a],
-    c: [a,f,h],
-    d: [e,f],
-    e: [d],
-    f: [c,d],
-    h: [c],
-    x: [a],
-}
+# adj_map = {
+#     a: [b,c],
+#     b: [a],
+#     c: [a,f,h],
+#     d: [e,f],
+#     e: [d],
+#     f: [c,d],
+#     h: [c],
+#     x: [a],
+# }
 
-g = Graph(adj_map)
+# g = Graph(adj_map)
 # g.DFS()
-g.directed_visualisation()
+
+# g.dijkstra(adj_map[a], adj_map[x])
+# g.directed_visualisation()
 # g.undirected_visualisation()
 # print(e.d)
 
+# a = Vertex("A")
+# b = Vertex("B")
+# c = Vertex("C")
+
+# adj_with_weights = {
+#     a: [(b,4), (c,2)],
+#     b: [(c,1)],
+#     c: [(b,2)]
+# }
+
+# g = Graph(adj_with_weights)
+
+# shortest_distance = g.dijkstra(start=a, target=b)
+# print(f"Shortest distance from A to B: {shortest_distance}")
+
+def draw_real_maze(walls: list[Wall], grid_size: int):
+    plt.figure(figsize=(6, 6))
+    
+    # Նկարում ենք արտաքին սահմանները (եզրագծերը)
+    plt.plot([0, grid_size, grid_size, 0, 0], [0, 0, grid_size, grid_size, 0], color="black", linewidth=5)
+
+    for wall in walls:
+        if not wall.is_open:  # Եթե պատը դեռ կա (չի պայթել)
+            # Ստանում ենք երկու վանդակների կոորդինատները
+            c1 = wall.u.name.replace("(", "").replace(")", "").split(",")
+            c2 = wall.v.name.replace("(", "").replace(")", "").split(",")
+            x1, y1 = int(c1[0]), int(c1[1])
+            x2, y2 = int(c2[0]), int(c2[1])
+
+            # Հաշվում ենք պատի գծի կոորդինատները
+            if x1 == x2:  # Հորիզոնական պատ հարևանների միջև (ուղղահայաց գիծ)
+                wall_x = [x1 + 1, x1 + 1]
+                wall_y = [max(y1, y2), max(y1, y2) + 1]
+            else:  # Ուղղահայաց հարևաններ (հորիզոնական գիծ)
+                wall_x = [max(x1, x2), max(x1, x2) + 1]
+                wall_y = [y1 + 1, y1 + 1]
+
+            plt.plot(wall_x, wall_y, color="black", linewidth=4)
+
+    plt.xlim(-0.5, grid_size + 0.5)
+    plt.ylim(grid_size + 0.5, -0.5) # Շրջում ենք Y-ը, որ վերևից սկսվի
+    plt.axis('off')
+    plt.title("Generated Labirinth (True Walls)")
+    plt.show()
+
+GRID_SIZE = 5
+vertices_grid = {}
+all_vertices = []
+all_walls = []
+
+for x in range(GRID_SIZE):
+    for y in range(GRID_SIZE):
+        v = Vertex(f"({x},{y})")
+        vertices_grid[(x,y)] = v
+        all_vertices.append(v)
+
+for x in range(GRID_SIZE):
+    for y in range(GRID_SIZE):
+        if x + 1 < GRID_SIZE:
+            all_walls.append(Wall(vertices_grid[(x,y)], vertices_grid[(x + 1,y)]))
+        if y + 1 < GRID_SIZE:
+            all_walls.append(Wall(vertices_grid[(x, y)], vertices_grid[(x, y + 1)]))
+
+print("--- Generating a Complex 5x5 Maze ---")
+maze_graph = kruskal_maze(all_vertices, all_walls)
+
+start_node = vertices_grid[(0, 0)]
+target_node = vertices_grid[(0, 2)]
+
+print("\n--- Searching the Shortest Path with Dijkstra ---")
+shortest_path_len = maze_graph.dijkstra(start_node, target_node)
+print(f"\nShortest path length from {start_node} to {target_node} is: {shortest_path_len} steps.")
+
+print("\n--- Visualizing Maze ---")
+maze_graph.maze_visualisation()
