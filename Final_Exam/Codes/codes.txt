@@ -1,0 +1,266 @@
+BOTTOM-UP-ROD-CUTTING(p, n)
+    Let dp[0..n] be a new array
+    dp[0] = 0
+    
+    // Solve for every rod length from 1 up to n
+    For j = 1 to n:
+        max_val = -Infinity
+        
+        // Find the best place to make the first cut i
+        For i = 1 to j:
+            max_val = MAX(max_val, p[i] + dp[j - i])
+            
+        dp[j] = max_val
+        
+    Return dp[n]
+
+--------------------------------------
+
+Masters Theorem for Decreasing Function
+
+T(n)=aT(n-b) +f(n), where a > 0, b > 0 and f(n) = O(n^k); where k ≥ 0
+
+case 1: if a<1 then T(n)=O(f(n))
+case 2: if a=1 then T(n)=O(n*f(n))
+case 3: if a>1 then T(n)=O(f(n)*a^(n/b))
+
+-------------------------------------
+
+Masters Theorem for Dividing Function
+T(n) = aT(n/b) + f(n); where a ≥ 1, b > 1 and f(n) = O(n^k * log(n)^p)
+case 1: if log_b(a) > k; then Θ(n^log_b(a))
+case 2: if log_b(a) = k; then there're 3 cases:
+           case 2.1: if p>-1; then Θ(n^k * log^(p+1)n)
+           case 2.2: if p=-1; then Θ(n^k * log(log(n)))
+           case 2.3: if p<-1; then Θ(n^k)
+case 3: if log_b(a) < k; then there're 2 cases:
+           case 3.1: if p≥0; then Θ(n^k * log^p(n))
+           case 3.2: if p<0; then O(n^k)
+
+---------------------------------------
+
+/* 
+    Պրիմի ալգորիթմում յուրաքանչյուր գագաթի համար պահում ենք key[u] (նվազագույն քաշը, որով կարելի է u-ն միացնել MST-ին) 
+        և parent[u] (թե որ գագաթից է այն միանում)։  
+    EXTRACT-MIN -> O(logV) total: V*O(logV)
+    DECREASE-KEY -> O(logV) total: E*O(logV)
+    PRIM -> O((E+V)logV) = O(ElogV)
+
+    Space Compexity is O(V+E); where V=amount of Vertices, E=amount of edges
+
+    EXTRACT-MIN-ը Heap-ից հանում է ամենամոտ գագաթը $O(\log V)$ ժամանակում։
+    
+    DECREASE-KEY-ը թարմացնում է հարևան գագաթի հեռավորությունը, երբ ավելի կարճ կող ենք գտնում։
+*/
+
+PRIM(G, w, r) {
+    // G: graph, w: edges' weight, r: root
+
+    FOR each u in G.Vertices:
+        key[u] = infinity
+        parent[u] = None
+        in_MST[u] = FALSE // արդյոք գագաթը ծառի մեջ է
+
+    key[r] = ∅
+    Q = G.Vertices // Լցնում ենք բոլոր գագաթները Min-Priority Queue-ի մեջ (ըստ key-ի)
+    WHILE Q is not empty:
+        u = EXTRACT-MIN(Q) // Վերցնում ենք նվազագույն key ունեցող գագաթը
+        in_MST[u] = TRUE // ավելացնում ենք MST-ի մեջ
+
+        FOR each v in G.adj[u]: // նայում ենք u-ի բոլոր հարևաններին
+            IF v in Q and w(u,v) < key[v]:
+                parent[v] = u
+                key[v] = w(u,v)
+                DECREASE-KEY(Q, v, key[v]) // Թարմացնում ենք Queue-ն        
+}
+
+/*
+    Կրուսկալի ալգորիթմն օգտագործում է DSU (Disjoint Set Union) տվյալների կառուցվածքը՝ ցիկլերից խուսափելու համար։
+    MAKE-SET(v) — ստեղծում է նոր բազմություն, որտեղ միակ տարրը v-ն է։
+    FIND-SET(v) — վերադարձնում է այն բազմության ներկայացուցչին (արմատին), որին պատկանում է v-ն։
+    UNION(u, v) — միավորում է երկու բազմությունները մեկի մեջ։
+
+    Ժամանակային բարդություն (Time Complexity): O(E*logV)
+    Space Compexity: O(E+V)
+*/
+
+-------------------------------------------------------------------------
+
+KRUSKAL(G, w) {
+    A = ∅ // MST's edges
+    FOR each v in G.Vertices:
+        MAKE-SET(v) // Ամեն գագաթ սկզբում առանձին բազմություն է
+    
+    // սորտավորում ենք գրաֆի բոլոր կողերը ըստ քաշի (w) աճման կարգի
+    SORT G.E into nondecreasing order by weight w
+
+    FOR each edge (u,v) in G.E: // ըստ սորտավորված կարգի
+        // Եթե u-ն ու v-ն նույն բազմության մեջ չեն, ուրեմն նրանց միացումը ցիկլ չի ստեղծի
+        IF FIND-SET(u) != FIN-SET(v):
+            A = A U {(u,v)} // ավելացնում ենք կողը MST-ի մեջ
+            UNION(u,v) // Միավորում ենք u-ի և v-ի բազմությունները
+    RETURN A
+}
+
+------------------------------------------------------------------------------
+
+// Binary Search Tree Successor and Predecessor
+
+TREE-SUCCESSOR(x) {
+    // Դեպք 1։ Ունի աջ ենթածառ
+    IF x.right != NIL:
+        RETURN TREE-MINIMUM(x.right)
+    
+    // Դեպք 2։ Չունի աջ ենթածառ
+    y = x.parent
+    WHILE y != NIL and x == y.right:
+        x = y
+        y = y.parent
+    RETURN y
+}
+
+TREE-MINIMUM(x) {
+    WHILE x.left != NIL:
+        x = x.left
+    RETURN x
+}
+
+TREE-PREDECESSOR(x) {
+    // Դեպք 1։ Ունի ձախ ենթածառ
+    IF x.left != NIL:
+        RETURN TREE-MAXIMUM(x.left)
+    
+    // Դեպք 2։ Չունի ձախ ենթածառ
+    y = x.parent
+    WHILE y != NIL and x == y.left:
+        x = y
+        y = y.parent
+    
+    RETURN y
+}
+
+TREE-MAXIMUM(x) {
+    WHILE x.right != NIL:
+        x = x.right
+    RETURN x
+}
+
+-------------------------------------------------------------
+
+// Dijktra's Algorithm
+DIJKSTRA(G, w, s)
+    // G: գրաֆ, w: կողերի քաշեր, s: սկզբնական գագաթ (source)
+    
+    // 1. Ինիցիալիզացիա (INITIALIZE-SINGLE-SOURCE)
+    FOR each v ∈ G.V:
+        d[v] = ∞
+        π[v] = NIL
+    d[s] = 0
+    
+    S = ∅                   // Բազմություն, որտեղ պահվելու են արդեն օպտիմալացված գագաթները
+    Q = G.V                 // Min-Priority Queue (ըստ d արժեքների)
+    
+    WHILE Q is not empty:
+        u = EXTRACT-MIN(Q)  // Վերցնում ենք նվազագույն d[u] ունեցող գագաթը
+        S = S ∪ {u}          // Ավելացնում ենք այն պատրաստի գագաթների մեջ
+        
+        FOR each v ∈ G.Adj[u]:  // Նայում ենք u-ի բոլոր հարևաններին
+            // Թուլացման գործողություն (RELAX)
+            IF d[v] > d[u] + w(u, v):
+                d[v] = d[u] + w(u, v)
+                π[v] = u
+                DECREASE-KEY(Q, v, d[v])  // Թարմացնում ենք հերթը
+
+-------------------------------------------------------------------
+
+BELLMAN-FORD(G, w, s)
+    // 1. Ինիցիալիզացիա
+    FOR each v ∈ G.V:
+        d[v] = ∞
+        π[v] = NIL // նախորդ գագաթը
+    d[s] = 0
+    
+    // 2. Բոլոր կողերի թուլացում (V-1) անգամ
+    FOR i = 1 TO |G.V| - 1:
+        FOR each edge (u, v) ∈ G.E:
+            // Թուլացման ստանդարտ պայման (RELAX)
+            IF d[v] > d[u] + w(u, v):
+                d[v] = d[u] + w(u, v)
+                π[v] = u
+                
+    // 3. Բացասական ցիկլերի ստուգում (V-րդ քայլ)
+    FOR each edge (u, v) ∈ G.E:
+        IF d[v] > d[u] + w(u, v):
+            RETURN FALSE // Գտնվել է բացասական ցիկլ, կարճագույն ճանապարհ գոյություն չունի
+            
+    RETURN TRUE
+
+----------------------------------------------------------------
+
+Function A_Star(startNode, targetNode, h)
+    // Open List-ը priority queue է, որտեղ տարրերը դասավորված են ըստ fScore-ի նվազման (մինիմումը սկզբում)
+    OpenList = Empty Priority Queue
+    
+    // Closed List-ը set է՝ արդեն լրիվ հետազոտված հանգույցների համար
+    ClosedList = Empty Set
+    
+    // Քարտեզներ՝ ճանապարհը հետ պտտելու և արժեքները պահելու համար
+    cameFrom = Empty Map // Պահում է, թե որ հանգույցից ենք եկել տվյալ հանգույց
+    gScore = Empty Map   // Լռելյայն բոլոր հանգույցների համար արժեքն է՝ անվերջություն (Infinity)
+    fScore = Empty Map   // Լռելյայն բոլոր հանգույցների համար արժեքն է՝ անվերջություն (Infinity)
+    
+    // Սկզբնական կետի ձևակերպումը
+    gScore[startNode] = 0
+    fScore[startNode] = h(startNode, targetNode) // f = 0 + h
+    
+    OpenList.Insert(startNode, fScore[startNode])
+    
+    While OpenList is not empty:
+        // Վերցնում ենք ամենափոքր fScore ունեցող հանգույցը
+        currentNode = OpenList.ExtractMin()
+        
+        // Եթե հասել ենք նպատակակետին, վերականգնում ենք ճանապարհը
+        If currentNode == targetNode:
+            Return Reconstruct_Path(cameFrom, currentNode)
+            
+        // Ընթացիկ հանգույցը համարվում է լրիվ մշակված
+        ClosedList.Add(currentNode)
+        
+        // Նայում ենք ընթացիկ հանգույցի բոլոր հարևաններին
+        For each neighbor in Get_Neighbors(currentNode):
+            
+            // Եթե հարևանն արդեն փակ ցուցակում է, բաց ենք թողնում
+            If neighbor in ClosedList:
+                Continue
+                
+            // Հաշվում ենք նոր հնարավոր gScore-ը այս հանգույցով անցնելիս
+            // Distance(currentNode, neighbor) սովորաբար 1 է (ցանցի վրա) կամ կողի կշիռը
+            tentative_gScore = gScore[currentNode] + Distance(currentNode, neighbor)
+            
+            // Եթե գտել ենք ավելի կարճ ճանապարհ դեպի այս հարևանը
+            If tentative_gScore < gScore[neighbor]:
+                
+                // Ֆիքսում ենք, որ այս հարևանի մոտ եկել ենք currentNode-ից
+                cameFrom[neighbor] = currentNode
+                gScore[neighbor] = tentative_gScore
+                fScore[neighbor] = gScore[neighbor] + h(neighbor, targetNode)
+                
+                // Եթե հարևանը դեռ չկա OpenList-ում, ավելացնում ենք
+                If neighbor not in OpenList:
+                    OpenList.Insert(neighbor, fScore[neighbor])
+                Else:
+                    // Եթե արդեն կար, թարմացնում ենք իր առաջնահերթությունը (fScore-ը)
+                    OpenList.DecreaseKey(neighbor, fScore[neighbor])
+                    
+    // Եթե OpenList-ը դատարկվեց ու target-ին չհասանք, ուրեմն ճանապարհ չկա
+    Return Failure
+
+Function Reconstruct_Path(cameFrom, currentNode):
+    totalPath = [currentNode]
+    While currentNode in cameFrom.Keys():
+        currentNode = cameFrom[currentNode]
+        totalPath.Prepend(currentNode) // Ավելացնում ենք զանգվածի սկզբից
+    Return totalPath
+
+---------------------------------------------------------------------------
+
