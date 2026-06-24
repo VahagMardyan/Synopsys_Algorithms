@@ -1,0 +1,29 @@
+To compile verilog program use the command below
+    iverilog -g2012 -o <output.vvp> <file1.sv> <file2.sv> ...
+To run verilog program use the command below
+    vvp <output.vvp>
+
+-g2012 -> enables SystemVerilog 2012 features
+
+Or create a function for PowerShell.
+    1. notepad $PROFILE
+    2. Paste this
+        function iverilog {
+            & "C:\iverilog\bin\iverilog.exe" -g2012 @Args
+        }
+        # # Replace path if need
+    3. Save the file
+    4. Restart PowerShell and use.
+
+In WSL install gtkwave. Then create this function for PowerShell.
+function gtkwave-wsl {
+	wsl gtkwave $args
+}
+
+Finally set alias for quick use.
+Set-Alias gw gtkwave-wsl
+
+Or just compile and run it using WSL.
+Compile -> iverilog filename.v -o output_name.vvp
+Run -> vvp output_name.vvp
+Run gtkwave -> gtkwave filename.vcd (or set an alias for gtkwave: gw filename.vcd)
