@@ -1,4 +1,27 @@
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating System files
+Thumbs.db
+.DS_Store
+
+# Build directories
+out/
+build/
+bin/
+
+# C++ / Python
 __pycache__
 *.exe
 *.obj
 *.pdb
+*.o
+*.out
+*.bin
+
+# Verilog compilation files
+*.vvp
+*.vcd
