@@ -1,5 +1,9 @@
 """
     Of course these algorithms are not for practical use. They've made just for fun.
+    Time Complexities for average case:
+        Stalin Sort: O(n)
+        Miracle Sort: O(oo)
+        Intelligent Design Sort: O(1)
 """
 
 import time
@@ -18,10 +22,11 @@ def stalin_sort(arr:list) -> list:
     
     return sorted_arr
 
-def is_sorted(arr) -> bool:
-    return all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
-
 def miracle_sort(arr:list) -> list:
+    
+    def is_sorted(arr) -> bool:
+        return all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
+    
     iteration = 0
     while not is_sorted(arr):
         iteration += 1
@@ -33,10 +38,6 @@ def miracle_sort(arr:list) -> list:
     return arr
 
 def intelligent_design_sort(arr:list) -> list:
-    # # The array has already perfect in its current state.
+    print("The array has already perfect in its current state.")
     return arr
 
-# arr = [1, 2, 10, 3, 25, 7, 30]
-# print(stalin_sort(arr))
-# miracle_sort(arr)
-# print(intelligent_design_sort(arr))

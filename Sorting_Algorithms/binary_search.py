@@ -1,3 +1,8 @@
+"""
+Binary Search algorithm implementation
+Time Complexity for average case: O(logn)
+"""
+
 def binarysearch(arr:list,x) -> int:
     """Assumes that the array is sorted"""
     # arr.sort()
